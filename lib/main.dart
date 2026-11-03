@@ -234,7 +234,7 @@ class AssistantHome extends StatelessWidget {
   }
 }
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({
     required this.animationsEnabled,
     required this.onAnimationsChanged,
@@ -243,6 +243,19 @@ class SettingsPage extends StatelessWidget {
 
   final bool animationsEnabled;
   final ValueChanged<bool> onAnimationsChanged;
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  late bool _animationsEnabled;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationsEnabled = widget.animationsEnabled;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -263,8 +276,11 @@ class SettingsPage extends StatelessWidget {
             contentPadding: const EdgeInsets.symmetric(horizontal: 2),
             title: const Text('Mascot animations'),
             subtitle: const Text('Enable subtle companion movement'),
-            value: animationsEnabled,
-            onChanged: onAnimationsChanged,
+            value: _animationsEnabled,
+            onChanged: (value) {
+              setState(() => _animationsEnabled = value);
+              widget.onAnimationsChanged(value);
+            },
           ),
           const SizedBox(height: 24),
           const _SettingsSectionTitle('PRIVACY'),
