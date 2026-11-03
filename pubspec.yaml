@@ -1,5 +1,5 @@
 name: raccoon_ai
-description: A local-first personal assistant with a geometric raccoon companion.
+description: A local-first personal assistant with a sleek raccoon companion.
 publish_to: 'none'
 version: 0.1.0+1
 
@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:
