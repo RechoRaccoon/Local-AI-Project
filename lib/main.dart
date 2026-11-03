@@ -268,20 +268,20 @@ class SettingsPage extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           const _SettingsSectionTitle('PRIVACY'),
-          ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 2),
-            leading: const Icon(Icons.phonelink_lock_outlined),
-            title: const Text('On-device processing'),
-            subtitle: const Text(
+          const ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 2),
+            leading: Icon(Icons.phonelink_lock_outlined),
+            title: Text('On-device processing'),
+            subtitle: Text(
               'Local AI is the planned default. A model has not been connected yet.',
             ),
           ),
           Divider(color: colors.outlineVariant),
-          ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 2),
-            leading: const Icon(Icons.history_rounded),
-            title: const Text('Conversation storage'),
-            subtitle: const Text(
+          const ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 2),
+            leading: Icon(Icons.history_rounded),
+            title: Text('Conversation storage'),
+            subtitle: Text(
               'Local conversation history will be added with the chat engine.',
             ),
           ),
@@ -320,16 +320,63 @@ class _SettingsSectionTitle extends StatelessWidget {
   }
 }
 
-class RaccoonMascot extends StatelessWidget {
+class RaccoonMascot extends StatefulWidget {
   const RaccoonMascot({required this.animationsEnabled, super.key});
 
   final bool animationsEnabled;
 
   @override
+  State<RaccoonMascot> createState() => _RaccoonMascotState();
+}
+
+class _RaccoonMascotState extends State<RaccoonMascot>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _float;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 4),
+    );
+    _float = Tween<double>(begin: -2.0, end: 2.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+    if (widget.animationsEnabled) _controller.repeat(reverse: true);
+  }
+
+  @override
+  void didUpdateWidget(covariant RaccoonMascot oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.animationsEnabled == oldWidget.animationsEnabled) return;
+    if (widget.animationsEnabled) {
+      _controller.repeat(reverse: true);
+    } else {
+      _controller.stop();
+      _controller.value = 0.5;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: _RaccoonPainter(),
-      child: const SizedBox.expand(),
+    return AnimatedBuilder(
+      animation: _float,
+      builder: (context, child) => Transform.translate(
+        offset: Offset(0, _float.value),
+        child: child,
+      ),
+      child: CustomPaint(
+        painter: _RaccoonPainter(),
+        child: const SizedBox.expand(),
+      ),
     );
   }
 }
@@ -354,7 +401,6 @@ class _RaccoonPainter extends CustomPainter {
 
     canvas.drawOval(const Rect.fromLTWH(48, 222, 136, 12), shadow);
 
-    // Shoulders and neck establish a natural animal silhouette.
     final body = Path()
       ..moveTo(47, 229)
       ..cubicTo(50, 194, 66, 174, 91, 164)
@@ -373,7 +419,6 @@ class _RaccoonPainter extends CustomPainter {
       ..close();
     canvas.drawPath(bib, chest);
 
-    // Ears are set wide and high, with tapered natural contours.
     final leftEar = Path()
       ..moveTo(67, 91)
       ..cubicTo(57, 66, 54, 35, 62, 17)
@@ -400,7 +445,6 @@ class _RaccoonPainter extends CustomPainter {
       ..close();
     canvas.drawPath(rightEarInner, innerEar);
 
-    // A tapered skull and cheek line replace the old oversized polygon head.
     final head = Path()
       ..moveTo(65, 71)
       ..cubicTo(78, 49, 99, 40, 119, 40)
@@ -419,7 +463,6 @@ class _RaccoonPainter extends CustomPainter {
         ..strokeWidth = 1.2,
     );
 
-    // Dark eye mask follows the brow and cheek contours.
     final leftMask = Path()
       ..moveTo(62, 94)
       ..cubicTo(76, 77, 96, 75, 112, 88)
@@ -435,7 +478,6 @@ class _RaccoonPainter extends CustomPainter {
     canvas.drawPath(leftMask, mask);
     canvas.drawPath(rightMask, mask);
 
-    // Eyes are narrow, dark, and set naturally into the mask.
     final leftEye = Path()
       ..moveTo(78, 101)
       ..quadraticBezierTo(88, 94, 99, 101)
@@ -452,7 +494,6 @@ class _RaccoonPainter extends CustomPainter {
     canvas.drawCircle(const Offset(91, 99), 1.5, glint);
     canvas.drawCircle(const Offset(154, 99), 1.5, glint);
 
-    // Pale muzzle bridge and cheek fur; intentionally no mouth is drawn.
     final muzzle = Path()
       ..moveTo(105, 108)
       ..cubicTo(109, 101, 114, 99, 119, 99)
@@ -469,7 +510,6 @@ class _RaccoonPainter extends CustomPainter {
       ..close();
     canvas.drawPath(nosePath, nose);
 
-    // Fine directional strokes add a restrained fur texture.
     final hair = Paint()
       ..color = const Color(0xFF657169)
       ..strokeWidth = 0.9
