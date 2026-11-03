@@ -122,9 +122,12 @@ class AssistantHome extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            const Spacer(flex: 2),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(vertical: 18),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 18),
             SizedBox(
               width: 230,
               height: 250,
@@ -192,8 +195,8 @@ class AssistantHome extends StatelessWidget {
                 ],
               ),
             ),
-            const Spacer(flex: 3),
-            Container(
+              const SizedBox(height: 28),
+              Container(
               margin: const EdgeInsets.fromLTRB(18, 8, 18, 12),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               decoration: BoxDecoration(
@@ -215,7 +218,7 @@ class AssistantHome extends StatelessWidget {
                 ],
               ),
             ),
-            const Padding(
+              const Padding(
               padding: EdgeInsets.only(bottom: 12),
               child: Text(
                 'PRIVATE BY DESIGN',
@@ -226,8 +229,9 @@ class AssistantHome extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
