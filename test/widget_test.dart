@@ -15,13 +15,26 @@ void main() {
     expect(find.text('LOCAL MODEL NOT CONNECTED'), findsOneWidget);
   });
 
-  testWidgets('opens settings and exposes the mascot motion preference',
-      (tester) async {
+  testWidgets('opens settings and toggles mascot motion', (tester) async {
     await tester.pumpWidget(const RaccoonAiApp());
     await tester.tap(find.byTooltip('Settings'));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 350));
 
     expect(find.text('Mascot animations'), findsOneWidget);
     expect(find.text('On-device processing'), findsOneWidget);
+
+    final toggle = tester.widget<SwitchListTile>(
+      find.widgetWithText(SwitchListTile, 'Mascot animations'),
+    );
+    expect(toggle.value, isTrue);
+
+    await tester.tap(find.byType(Switch).first);
+    await tester.pump();
+
+    final updatedToggle = tester.widget<SwitchListTile>(
+      find.widgetWithText(SwitchListTile, 'Mascot animations'),
+    );
+    expect(updatedToggle.value, isFalse);
   });
 }
